@@ -32,6 +32,7 @@ const (
 type ServerConn struct {
 	options *dialOptions
 	conn    *textproto.Conn
+	TCPConn *net.TCPConn
 	host    string
 
 	// Server capabilities discovered at runtime
@@ -118,6 +119,7 @@ func Dial(addr string, options ...DialOption) (*ServerConn, error) {
 		options:  do,
 		features: make(map[string]string),
 		conn:     textproto.NewConn(do.wrapConn(tconn)),
+		TCPConn:  tconn.(*net.TCPConn),
 		host:     remoteAddr.IP.String(),
 	}
 
