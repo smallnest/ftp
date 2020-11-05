@@ -78,7 +78,7 @@ type Response struct {
 }
 
 // Dial connects to the specified address with optional options
-func Dial(addr string, options ...DialOption) (*ServerConn, error) {
+func DialNetwork(network string, addr string, options ...DialOption) (*ServerConn, error) {
 	do := &dialOptions{}
 	for _, option := range options {
 		option.setup(do)
@@ -95,7 +95,7 @@ func Dial(addr string, options ...DialOption) (*ServerConn, error) {
 		if do.dialFunc != nil {
 			tconn, err = do.dialFunc("tcp", addr)
 		} else if do.tlsConfig != nil && !do.explicitTLS {
-			tconn, err = tls.DialWithDialer(&do.dialer, "tcp", addr, do.tlsConfig)
+			tconn, err = tls.DialWithDialer(&do.dialer, network, addr, do.tlsConfig)
 		} else {
 			ctx := do.context
 
@@ -103,7 +103,7 @@ func Dial(addr string, options ...DialOption) (*ServerConn, error) {
 				ctx = context.Background()
 			}
 
-			tconn, err = do.dialer.DialContext(ctx, "tcp", addr)
+			tconn, err = do.dialer.DialContext(ctx, network, addr)
 		}
 
 		if err != nil {
@@ -139,6 +139,11 @@ func Dial(addr string, options ...DialOption) (*ServerConn, error) {
 	}
 
 	return c, nil
+}
+
+// Dial connects to the specified address with optional options
+func Dial(addr string, options ...DialOption) (*ServerConn, error) {
+	return DialNetwork("tcp", addr, options...)
 }
 
 // DialWithTimeout returns a DialOption that configures the ServerConn with specified timeout
