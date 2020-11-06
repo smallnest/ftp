@@ -272,9 +272,11 @@ func (c *ServerConn) Login(user, password string) error {
 	switch code {
 	case StatusLoggedIn:
 	case StatusUserOK:
-		_, _, err = c.cmd(StatusLoggedIn, "PASS %s", password)
-		if err != nil {
-			return err
+		if len(password) > 0 {
+			_, _, err = c.cmd(StatusLoggedIn, "PASS %s", password)
+			if err != nil {
+				return err
+			}
 		}
 	default:
 		return errors.New(message)
