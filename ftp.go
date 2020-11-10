@@ -282,27 +282,27 @@ func (c *ServerConn) Login(user, password string) error {
 		return errors.New(message)
 	}
 
-	// Probe features
-	err = c.feat()
-	if err != nil {
-		return err
-	}
-	if _, mlstSupported := c.features["MLST"]; mlstSupported {
-		c.mlstSupported = true
-	}
-	if _, usePRET := c.features["PRET"]; usePRET {
-		c.usePRET = true
-	}
+	// // Probe features
+	// err = c.feat()
+	// if err != nil {
+	// 	return err
+	// }
+	// if _, mlstSupported := c.features["MLST"]; mlstSupported {
+	// 	c.mlstSupported = true
+	// }
+	// if _, usePRET := c.features["PRET"]; usePRET {
+	// 	c.usePRET = true
+	// }
 
-	// Switch to binary mode
-	if _, _, err = c.cmd(StatusCommandOK, "TYPE I"); err != nil {
-		return err
-	}
+	// // Switch to binary mode
+	// if _, _, err = c.cmd(StatusCommandOK, "TYPE I"); err != nil {
+	// 	return err
+	// }
 
-	// Switch to UTF-8
-	if !c.options.disableUTF8 {
-		err = c.setUTF8()
-	}
+	// // Switch to UTF-8
+	// if !c.options.disableUTF8 {
+	// 	err = c.setUTF8()
+	// }
 
 	// If using implicit TLS, make data connections also use TLS
 	if c.options.tlsConfig != nil {
